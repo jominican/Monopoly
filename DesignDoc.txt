@@ -1,0 +1,213 @@
+Design Document
+
+Game Board ***qmake a project file for the folder, then run project file***
+The Game Board will implement a board game that creats a board game, players, game pieces and simulate a real game where players roll dices to move around the board. As each player lands on a piece, the player will have to follow the action displayed on the piece and meet the results of the action (losing/gaining money, move back spaces, buying properties, etc)
+
+Rules:: This game is similar to an actual Monopoly game where players will go around the board buying properties, upgrading properties, drawing cards, and landing on spaces that teleports you random places. One thing to note that this is speed Monopoly where all the properties are on the top and bottom row and the rent increases by a lot when a house is bought/upgraded. The money gain/loss will be updated when a card is drawn, a space is landed, or after every turn. Every time a player rolls the dice, the player will gain $500 per turn. Once a player's money drops below $0, the game will end. The game will end when a player resign as well. As soon as one player resigns or loses due to negative money, whoever has the most money at that time will be declared the winner. In this game, there are no rules for every player to take turns. In effect, any player can go at any time to simulate a real-life monopoly game where people can keep rolling if they wish or they can skip a player's turn as punishment. Also, a player is forced to buy/upgrade a property every time. Once a property is bought, all the property of that color will be upgraded. Buying a property only upgrades the property and does not give ownership to the player. **THERE ARE NO OWNERSHIP OF PROPERTY IN THIS GAME** An upgraded property will cost significantly more than the listed price depending on how many times it has been upgraded. If after a player buy/upgrade a property has no money left, he will automatically lose. 
+
+Gameplay:: Everyone will choose a player by gamepiece. You first click on the player you want to be: p1, p2, p3 ,p4. Then click on the piece you want to be. Each player has their own player dice, so the player can only move by rolling their respective die. The dices will not be enabled until at least two players join the game. Any additional player can join the game at any time by clicking on the leftover player slot and pieces. The first player to reach a community chest/chance space will not be able to draw a card, all subsequent landing on that space wil be able to draw a card.
+
+		MainWindow mw; 
+
+		//PA 4,5 ONLY, not used in PA6//
+		int num = 10;
+		string pieces[num];
+		int numPlayers; 
+		MoveAction cardMove[2];
+		Bank cardMoney[8];
+		Bank money; 
+		MoneyAction a;
+		GotoAction gt; 
+		House h; 
+		Cards cards[10];
+		bool play = true; 
+		Cards cards1[10];
+		bool sale[21] = {false}; 
+		int pl[21];
+		char yes; 
+
+Classes
+
+Class mainwindow
+    MainWindow();
+			constructor for setting all the pushbuttons, labels, pixmaps, seed, primary initializations
+		void drawCard( QPushButton* n );
+			this function allows the player draw card from the chance deck, disabeling and enableling the card button when appropriate. 
+
+		void drawCard1( QPushButton* n);
+			this function allows the player draw card from the community chest deck, disabeling and enableling the card button when appropriate. 
+
+		void goRandom(QPushButton* n);
+			this function teleports a player piece to a random location
+
+		void resign();
+			this function allows players to resign from the game at any time. Player with the most remaining money will be declared winner. 
+
+		void buyHouse(QPushButton* n);
+			this function allows the player , disabeling and enableling the card button when appropriate. 
+
+		void playerOne();
+			this function enables the player 1 button appropriately when the player has not been chosen and disabling it when it has been chosen
+
+		void playerTwo();
+			this function enables the player 2 button appropriately when the player has not been chosen and disabling it when it has been chosen
+
+		void playerThree();
+			this function enables the player 3 button appropriately when the player has not been chosen and disabling it when it has been chosen
+
+		void playerFour();
+			this function enables the player 4 button appropriately when the player has not been chosen and disabling it when it has been chosen
+
+		void checkLoss();
+			this function checks if a single player has money dropped below 0, causing the game to end immediately. 
+
+    void randomNum();
+			this function rolls a random number from 1-6, and changes the pixmap of the dice accordingly for player 1 dice. 
+
+    void randomNum1();
+			this function rolls a random number from 1-6, and changes the pixmap of the dice accordingly for player 2 dice. 
+
+    void randomNum2();
+			this function rolls a random number from 1-6, and changes the pixmap of the dice accordingly for player 3 dice. 
+
+    void randomNum3();
+			this function rolls a random number from 1-6, and changes the pixmap of the dice accordingly for player 4 dice. 
+
+		void chooseCard();
+			this function flips the chance card deck from facedown to faceup whenever a player decides to draw a card
+
+		void chooseCard1();
+			this function flips the community chest card deck from facedown to faceup whenever a player decides to draw a card
+
+		void choosePlayer(int);
+			this function allows the players to choose player pieces without any repeats and the game will only start when at least 2 pieces have been chosen. Once a piece is chosen, it cannot be changed. When selection is finished, the piece will be automatically placed at the starting position to indicate readiness. 
+
+		void payMoney(int n);
+			this function pays money to players depending on the type of action needed to transfer money. 
+
+
+
+Class GameBoard
+	GameBoard(); //constructor
+		initializing boardLabel to import that board image.  
+	~GameBoard(); //deconstructor
+		deleting the dynamically allocated objects declared in the constructor.
+
+
+
+Class Players
+	Players();//constructor
+		seeds a random; 
+	~Players();//deconstructor
+	int movePosition();
+		this function will move the position of the player based on the dice rolled. The player will loop back to the starting point after it travels around the board. Uses an if statement to check its current position. 
+
+	int setPosition();
+		this function sets the position for each player. Initially, everyone is set to 0, can change in the future to set a player to a specific destination. 
+
+	int getPosition();
+		Gets the current position of the player, specifically the integer value it holds right now. 
+
+	string getName();
+		Gets the name (piece) of the player after a player has selected his piece in the main function
+
+	string setName(string choice);
+		Sets the name (piece) of the player depending on which piece the player chooses as its gamepiece. 
+
+	int setNewPosition(int newSpace);
+		Sets the new position of the player. 
+
+	void addMoney(int amount);
+		Add amount of money to player. 
+
+	void subtractMoney(int amount);
+		Subtract amount of money from player.
+
+	int setMoney(int n);
+		Set the amount of money to player. 
+
+	int getMoney();	
+		Get the amount of money a player currently has. 
+
+Class Space
+	Space(string n);//constructor that takes in a parameter to set the name of the space
+	~Space();//deconstructor
+	string getName();
+		This function returns the name of the space. 
+	
+	void buildHouse(int n);
+		calls a house.buyHouse() function that builds a house on the space.  
+	int numHouse();
+		return house.getNumHouse() function that gets the number of houses. 
+
+Class Bank
+		Bank();//constructor 
+		~Bank();//deconstructor 
+		int setBank(int bank);
+			Set the number of money in the bank 
+
+		void payBank(Players &p1, int n );
+			Gets the player to pay the bank however much money using players subtract method and add the same amount of money to the 	bank 
+		void payPlayer(Players &p1, int n );
+			Gets the bank to pay the player however much money using players addMoney method and add the same amount money to the player
+
+
+Class Action
+		Action();//constructor
+		Action(string name);//constructor that takes in a string as arguement
+		~Action();//deconstructor
+		string printName();
+			returns a string called text
+		virtual void executeAction(Players &p1, int amount)=0;
+			virtual void function used by student classes MoveAction, GotoAction
+
+
+Class MoveAction
+		MoveAction();//constructor
+		MoveAction(string name);//construction that takes in a string as arguement
+		~MoveAction();//deconstructor
+		int setAmount(int n);
+			Set the amount of spaces to be moved. 
+
+		void getAmount(int n);
+			Get the amount of spaces to be moved. 
+
+		void executeAction(Players &p1, int newSpace);
+			virtual function from the Action class that takes a player and move the player by a set number of spaces. 
+
+Class MoneyAction
+		MoneyAction();//constructor
+		~MoneyAction();//deconstructor
+		void payMoney(Players &p1, Players &p2, int amount);
+			Money transaction between p1 and p2. Takes amount of money from P2 and add it to amount of money to P1. 
+			
+Class GotoAction
+		GotoAction();//constructor
+		GotoAction(string name);//constructor that takes in a string arguement
+		~GotoAction();//deconstructor
+		void executeAction(Players &p1, int newSpace);
+			Calls on the parent Action class and executes an action that transfers a player to a definite space. 
+
+Class Cards
+		Cards();//constructor
+			planting a rand seed in the constructor. 
+		~Cards();//deconstructor
+		Cards(string n);//constructor that takes in a string arguement
+		void setName(string n);
+			Set the name of the card. 
+		int drawCards();	
+			returns a random number that will be used to draw a random card. A random card is drawn whenever a player lands on a draw card space, then the deck is shuffled instead of always taking from the top card. 
+		void printCard();
+			print out the player drew a Chance card. 
+		void printCard1();
+			print out the player drew a Community Chest card. 
+
+PA4.cpp (main.cpp file)
+	int randomNum() //generate a random num that will be used to draw a random card from a deck. 
+	int randomSpace()// generate a random num that will be used to teleport a player to a random space 
+	int main()
+		In this cpp, the system will set the gamepieces for the game, set the card decks for the game, explain the rules and prompt the user to enter a player between 2 to 4. Once it receives an input, it will dynamically allocate the players array and allows the players to select a piece. A piece cannot be selected twice, or else the program or terminate (SO FOLLOW A SIMPLE INSTRUCTION!). After each player has a piece, a gameboard with all players at the starting position will be displayed along with the amount of money each player has (starting value $5000). While every player still has money > 0, the game will continue playing and displays movement, actions, purchasing, upgrading, and money transfers every time a player rolls a die. In this main function, there are a lot of checks to see if a player is on a space using onSpace() from gameBoard class. These checks are the fundamentals for determining what to do when a player lands on a specific space and implementing the 4 actions needed in this PA (movespace, jumpspace, moneytransfer, building houses, drawcard). A warning message will be displayed when a player reaches below $600, asking if he wants to resign. If a single player resigns or a player runs out of money, the game will conclude and the winner will be whoever has the most money remaining. 
+
+How to Compile the program. Compile PA4.cpp as the main along the rest of the .h/.cpp. Or you can just use the make file prepared.
+make PA4.cpp
+./PA4.cpp
